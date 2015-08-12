@@ -20,6 +20,10 @@
                         {
                             "caption": "Clear Annotations",
                             "command": "csscoco_clear"
+                        },
+                        {
+                            "caption": "Settings",
+                            "command": "csscoco_settings"
                         }
                     ]
                 }

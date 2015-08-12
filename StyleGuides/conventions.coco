@@ -1,0 +1,6 @@
+Semantic
+ignore space, indent, tab, comment, newline
+{
+    forbid id
+    message 'Do not use ids'
+}

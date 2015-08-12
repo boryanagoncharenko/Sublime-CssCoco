@@ -6,5 +6,9 @@
 {
     "keys": ["super+shift+a"],
     "command": "csscoco_clear"
+},
+{
+    "keys": ["super+shift+,"],
+    "command": "csscoco_settings"
 }
 ]

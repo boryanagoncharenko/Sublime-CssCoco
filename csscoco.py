@@ -4,22 +4,20 @@ import sublime, sublime_plugin
 
 
 PLUGIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
+STYLE_GUIDES_FOLDER = PLUGIN_FOLDER + '/StyleGuides'
+SETTINGS_FILE = 'csscoco.sublime-settings'
 
 
 class CsscocoCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         filepath = self.view.file_name()
-        if not filepath:
+        if not self.is_file_correct(filepath):
             return
-
-        if not self.is_css_file(filepath):
-            return
-
-        self.view.erase_regions('csscoco_errors')
-
-        script_name = '/Library/Frameworks/Python.framework/Versions/3.4/bin/csscoco'
-        coco_file = '/Users/bore/Projects/ThesisCode/Source/samples/buffer.coco'
         
+        self.view.erase_regions('csscoco_errors')
+        script_name = self.get_script_name()
+        coco_file = self.get_conventions_file()
+
         temp_file_path = self.save_to_temp_file()
         cmd = [script_name, temp_file_path, coco_file]
         out = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=False, env=os.environ)
@@ -31,15 +29,23 @@ class CsscocoCommand(sublime_plugin.TextCommand):
         self.view.add_regions('csscoco_errors', hints, 
             scope='keyword',
             icon='circle',
-            flags=sublime.DRAW_EMPTY | 
-            sublime.DRAW_NO_FILL )
+            flags=sublime.DRAW_EMPTY | sublime.DRAW_NO_FILL )
 
-        print('coco command executed')
+    def is_file_correct(self, filepath):
+        return filepath and self.is_css_file(filepath)
+
+    def get_script_name(self):
+        s = sublime.load_settings(SETTINGS_FILE)
+        return s.get('csscoco_path')
+
+    def get_conventions_file(self):
+        s = sublime.load_settings(SETTINGS_FILE)
+        return ''.join([STYLE_GUIDES_FOLDER, '/', s.get('conventions_file')])
 
     def save_to_temp_file(self):
         buffer_text = self.view.substr(sublime.Region(0, self.view.size()))
-        temp_file_path = PLUGIN_FOLDER + "/.__temp__"
-        f = codecs.open(temp_file_path, mode="w", encoding="utf-8")
+        temp_file_path = ''.join([PLUGIN_FOLDER, '/', '.__temp__'])
+        f = codecs.open(temp_file_path, mode='w', encoding='utf-8')
         f.write(buffer_text)
         f.close()
         return temp_file_path
@@ -53,20 +59,20 @@ class CsscocoCommand(sublime_plugin.TextCommand):
                 hints.append(hint_line)
         return hints
 
-    def on_quick_pane_selection(self, index):
-        pass
-        
-
     def is_css_file(self, filepath):
-        if len(filepath) < 4:
-            return False
-        return filepath[-4:] == '.css'
+        return filepath.endswith('.css')
 
 
 class CsscocoClearCommand(sublime_plugin.TextCommand):
   def run(self, edit):
-    print('clear command executed')
-    self.view.erase_regions("csscoco_errors")
+    self.view.erase_regions('csscoco_errors')
+    self.view.erase_status('csscoco_status')
+
+
+class CsscocoSettingsCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        w = self.view.window()
+        w.open_file(PLUGIN_FOLDER + '/' + SETTINGS_FILE)
 
 
 class Violations(object):
@@ -96,11 +102,7 @@ class Violations(object):
 
 class SelectionListener(sublime_plugin.EventListener):
     def on_selection_modified(self, view):
-        current_filepath = view.file_name()
-        if not current_filepath:
-            return
-        
-        if Violations.filepath != current_filepath:
+        if not self.should_update_status(view.file_name()):
             return
         
         (row,col) = view.rowcol(view.sel()[0].begin())
@@ -111,5 +113,20 @@ class SelectionListener(sublime_plugin.EventListener):
             return
         
         view.set_status('csscoco_status', ''.join(Violations.line_to_violations[line_number]))
+
+    def should_update_status(self, file_path):
+        return file_path and Violations.filepath == file_path
+
+    def on_post_save(self, view):
+        if self.should_run_on_save() and self.is_file_correct(view.file_name()):
+            sublime.active_window().run_command("csscoco")
+
+    def should_run_on_save(self):
+        s = sublime.load_settings(SETTINGS_FILE)
+        return s.get('run_on_save', False)
+
+    def is_file_correct(self, filepath):
+        return filepath.endswith('.css')
+
 
 
