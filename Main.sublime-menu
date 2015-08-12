@@ -1,5 +1,32 @@
-[{
-	"id": "CssCoco",
-	"caption": "CssCoco",
-	"command": "csscoco",
-}]
+[
+{
+    "caption": "Preferences",
+    "id": "preferences",
+    "children":
+    [
+        {
+            "caption": "Package Settings",
+            "id": "package-settings",
+            "children":
+            [
+                {
+                    "caption": "CssCoco",
+                    "children":
+                    [
+                        {
+                            "caption": "Lint Code",
+                            "command": "csscoco"
+                        },
+                        {
+                            "caption": "Clear Annotations",
+                            "command": "csscoco_clear"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+
+]

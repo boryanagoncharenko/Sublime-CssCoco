@@ -2,5 +2,9 @@
 {
     "keys": ["super+shift+c"],
     "command": "csscoco"
+},
+{
+    "keys": ["super+shift+a"],
+    "command": "csscoco_clear"
 }
 ]

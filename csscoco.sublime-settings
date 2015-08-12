@@ -1,0 +1,14 @@
+{
+  // Path to csscoco command
+  "csscoco_path": {
+    "osx": "/Library/Frameworks/Python.framework/Versions/3.4/bin/csscoco",
+    "windows": "C:/Program Files/csscoco/csscoco.exe",
+    "linux": "/usr/bin/csscoco"
+  },
+
+  // Run csscoco when the file is saved
+  "run_on_save": true,
+
+  // The coco file containing the conventions
+  "conventions": "conventions.coco"
+}
