@@ -4,3 +4,18 @@ ignore space, indent, tab, comment, newline
     forbid id
     message 'Do not use ids'
 }
+
+/*
+
+# class SaveListener(sublime_plugin.EventListener):
+#     def on_post_save(self, view):
+#         if self.should_run_on_save() and self.is_file_correct(view.file_name()):
+#             sublime.active_window().run_command("csscoco")
+
+
+    # def should_run_on_save(self):
+    #     s = sublime.load_settings(SETTINGS_FILE)
+    #     return s.get('run_on_save', False)
+
+
+*/
