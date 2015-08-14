@@ -69,7 +69,7 @@ class CsscocoCommand(sublime_plugin.TextCommand):
     def _get_line_and_violation(self, string_line):
         pos = string_line.find(':')
         line_number = int(string_line[18:pos])
-        message = string_line[pos+2:-1]
+        message = string_line[pos+1:]
         return line_number, message
 
     def get_script_name(self):

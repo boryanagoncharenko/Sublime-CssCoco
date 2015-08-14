@@ -3,7 +3,7 @@
     "csscoco_path": "/Library/Frameworks/Python.framework/Versions/3.4/bin/csscoco",
   
     // The coco file containing the conventions
-    "conventions_file": "/Users/bore/Projects/ThesisCode/Sublime/StyleGuides/google.coco",
+    "conventions_file": "/Users/bore/Projects/ThesisCode/Sublime/StyleGuides/conventions.coco",
     
     // Run csscoco when the file is saved
     "run_on_save": true
