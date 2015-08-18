@@ -5,8 +5,9 @@ import sublime, sublime_plugin
 
 PLUGIN_FOLDER = os.path.dirname(os.path.realpath(__file__))
 SETTINGS_FILE = 'csscoco.sublime-settings'
-NO_VIOLATIONS_STATUS = 'No violations! Hooraay!'
+NO_VIOLATIONS_STATUS = 'No violations were discovered! Hooraay!'
 INVALID_CSS_STATUS = 'Please check the validity of your CSS!'
+COCO_FILE_NOT_FOUND_STATUS = 'The .coco file you have specified is not found. Press Shift+Cmd+, and specify a correct conventions file.'
 COCO_ERRORS_STATUS = 'There are errors in your coco file. Open Sublime console (View > Show Console) for details'
 ERROR_LOG_HEADER = '*** CssCoco *** The following errors were found is your .coco file:'
 
@@ -20,6 +21,9 @@ class CsscocoCommand(sublime_plugin.TextCommand):
         Utils.clear_regions(self.view)
         script_name = self.get_script_name()
         coco_file = self.get_conventions_file()
+        if not os.path.isfile(coco_file):
+            Utils.set_status(self.view, COCO_FILE_NOT_FOUND_STATUS)
+            return
         temp_file_path = self.save_to_temp_file()
         cmd = [script_name, temp_file_path, coco_file]
         out = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=False, env=os.environ)
@@ -37,13 +41,15 @@ class CsscocoCommand(sublime_plugin.TextCommand):
         else:
             violations = self._construct_violations(out)
             result = CocoResult.create_violations_result(violations)
-            hints = self.get_hints(violations)
-            if not hints:
-                Utils.set_status(self.view, NO_VIOLATIONS_STATUS)
-            else:
-                Utils.draw_regions(self.view, hints)
-            
+            self._draw_violations(violations)
         Storage.store(filepath, result)
+
+    def _draw_violations(self, violations):
+        hints = self.get_hints(violations)
+        if not hints:
+            Utils.set_status(self.view, NO_VIOLATIONS_STATUS)
+        else:
+            Utils.draw_regions(self.view, hints)
 
     def _is_invalid_css(self, output):
         return output.startswith('Please check')
@@ -170,7 +176,6 @@ class SelectionListener(sublime_plugin.EventListener):
         file_name = view.file_name()
         if not self.should_update_status(file_name):
             return
-        
         (row,col) = view.rowcol(view.sel()[0].begin())
         line_number = row + 1
         line_to_violation = Storage.get_violations(file_name)
