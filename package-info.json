@@ -1,0 +1,11 @@
+{
+	"name": "CssCoco",
+	"details": "https://github.com/boryanagoncharenko/Sublime-CssCoco",
+	"releases": [
+		{
+			"sublime_text": "*",
+			"platforms": ["osx", "linux"],
+			"tags": true
+		}
+	]
+}
