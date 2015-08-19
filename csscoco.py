@@ -9,7 +9,7 @@ NO_VIOLATIONS_STATUS = 'No violations were discovered! Hooraay!'
 INVALID_CSS_STATUS = 'Please check the validity of your CSS!'
 COCO_FILE_NOT_FOUND_STATUS = 'The .coco file you have specified is not found. Press Shift+Cmd+, and specify a correct conventions file.'
 COCO_ERRORS_STATUS = 'There are errors in your coco file. Open Sublime console (View > Show Console) for details'
-ERROR_LOG_HEADER = '*** CssCoco *** The following errors were found is your .coco file:'
+ERROR_LOG_HEADER = '*** The following errors were found is your .coco file:'
 
 
 class CsscocoCommand(sublime_plugin.TextCommand):
@@ -24,6 +24,7 @@ class CsscocoCommand(sublime_plugin.TextCommand):
         if not os.path.isfile(coco_file):
             Utils.set_status(self.view, COCO_FILE_NOT_FOUND_STATUS)
             return
+        
         temp_file_path = self.save_to_temp_file()
         cmd = [script_name, temp_file_path, coco_file]
         out = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=False, env=os.environ)
@@ -31,25 +32,29 @@ class CsscocoCommand(sublime_plugin.TextCommand):
         out = out.decode('utf-8') 
 
         if self._is_invalid_css(out):
-            result = CocoResult.create_invalid_css_result()
+            Storage.store(filepath, CocoResult.create_invalid_css_result())
             Utils.set_status(self.view, INVALID_CSS_STATUS)
-        elif self._contains_errors(out):
+            return
+
+        if self._contains_errors(out):
             coco_errors = self._construct_coco_errors(out)
-            result = CocoResult.create_coco_errors_result(coco_errors)
+            Storage.store(filepath, CocoResult.create_coco_errors_result(coco_errors))
             Utils.set_status(self.view, COCO_ERRORS_STATUS)
             Utils.print_in_console(ERROR_LOG_HEADER + '\n' + coco_errors)
-        else:
-            violations = self._construct_violations(out)
-            result = CocoResult.create_violations_result(violations)
-            self._draw_violations(violations)
-        Storage.store(filepath, result)
+            return 
+
+        if self._no_violations(out):
+            Storage.store(filepath, CocoResult.create_violations_result([]))
+            Utils.set_status(self.view, NO_VIOLATIONS_STATUS)
+            return 
+        
+        violations = self._construct_violations(out)
+        Storage.store(filepath, CocoResult.create_violations_result(violations))
+        self._draw_violations(violations)
 
     def _draw_violations(self, violations):
         hints = self.get_hints(violations)
-        if not hints:
-            Utils.set_status(self.view, NO_VIOLATIONS_STATUS)
-        else:
-            Utils.draw_regions(self.view, hints)
+        Utils.draw_regions(self.view, hints)
 
     def _is_invalid_css(self, output):
         return output.startswith('Please check')
@@ -58,7 +63,11 @@ class CsscocoCommand(sublime_plugin.TextCommand):
         return output.startswith('Error log:')
 
     def _construct_coco_errors(self, output):
-        return output[11:].strip()
+        i = output.find('\n')
+        return output[i:].strip()
+
+    def _no_violations(self, output):
+        return output.startswith('No violations')
 
     def _construct_violations(self, output):
         result = {}
