@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>coco</string>
+	</array>
+	<key>name</key>
+	<string>CssCoco</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>comment</key>
+			<string>constant numbers</string>
+			<key>match</key>
+			<string>(?&lt;!\w)\-*\+*\d+(\.\d+)?</string>
+			<key>name</key>
+			<string>constant.numeric.ssraw</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>strings</string>
+			<key>match</key>
+			<string>\'.*\'</string>
+			<key>name</key>
+			<string>string.single.ssraw</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>operators</string>
+			<key>match</key>
+			<string>(?&lt;!\w)(or|and|not|in|is|between|after|before|match|next-to)(?!(\w|\-))</string>
+			<key>name</key>
+			<string>keyword.operator.ssraw</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>comparison operators</string>
+			<key>match</key>
+			<string>(?&lt;!\w)(ignore|find|message|where|require|forbid)(?!(\w|\-))</string>
+			<key>name</key>
+			<string>keyword.other.ssraw</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>constant literals</string>
+			<key>match</key>
+			<string>(?i)(true|false)</string>
+			<key>name</key>
+			<string>constant.language.ssraw</string>
+		</dict>
+		<dict>
+			<key>comment</key>
+			<string>keywords</string>
+			<key>match</key>
+			<string>(lowercase|uppercase)</string>
+			<key>name</key>
+			<string>support.constant.ssraw</string>
+		</dict>
+		<dict>
+			<key>begin</key>
+			<string>/\*</string>
+			<key>captures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.comment.mn</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>\*/</string>
+			<key>name</key>
+			<string>comment.block.ssraw</string>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>source.coco</string>
+	<key>uuid</key>
+	<string>7f0753b0-e4ea-4ab9-b19a-5b535bdb3618</string>
+</dict>
+</plist>

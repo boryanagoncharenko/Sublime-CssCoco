@@ -1,9 +1,9 @@
 {
     // Path to the csscoco command
-    "csscoco_path": "/Library/Frameworks/Python.framework/Versions/3.4/bin/csscoco",
+    "csscoco_path": "path/to/csscoco_command",
   
     // The coco file containing the conventions
-    "conventions_file": "/Users/bore/Projects/ThesisCode/Demo/StyleGuides/stoyan.coco",
+    "conventions_file": "path/to/coco_file",
     
     // Run csscoco when the file is saved
     "run_on_save": true

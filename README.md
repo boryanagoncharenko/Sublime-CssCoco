@@ -1,15 +1,13 @@
-##Sublime plugin for [CssCoco](https://github.com/boryanagoncharenko/CssCoco)
+##[CssCoco](https://github.com/boryanagoncharenko/CssCoco) Sublime Text 3 Plugin
 
 ###Installation:
-1. Follow the steps to [install CssCoco](https://github.com/boryanagoncharenko/CssCoco#installation)
-2. Add the plugin via [Package Control](https://packagecontrol.io/):
-  * Use `Cmd(ctrl) + Shift + P` to open the command palette
-  * Select `Package Control: Add repository`
-  * Input the link of this repository
-  * Use Package control to install `Sublime-CssCoco`
-3. Find the path to csscoco `which csscoco`
-4. Update the settings with `csscoco` executable and conventions file
+1. Install [CssCoco](https://github.com/boryanagoncharenko/CssCoco#installation)
+2. Add the plugin using [Package Control](https://packagecontrol.io/):
+  * Open package control and choose `Package Control: Add repository`. Input the following link: `https://github.com/boryanagoncharenko/Sublime-CssCoco`
+  * Open package control and choose `Package Control: Install Package`. Search for `Sublime-CssCoco` and install it.
+3. Open the CssCoco settings file (`Cmd+Shift+,`) and set the `csscoco_path` to the path of the `csscoco` executable. Also, set the `conventions_file` variable to the path to your .coco file ([here](https://github.com/boryanagoncharenko/CssCoco/tree/master/samples) are some sample .coco files).
 
 ###Usage:
-1. By default CssCoco will lint every CSS file on Save, to change that you can update the settings.
-2. You can force validation by using `Cmd+Shift+C`
+Open a .css file in Sublime Text 3 and hit `Cmd+Shift+C`. Similarly to other linter tools, rows that contain a violation will be marked with a border. When you place your cursor on a row with violation, the specific error message will appear in the statusbar.
+
+By default CssCoco will lint every CSS file on file Save. You can change this option from the CssCoco settings file (`Cmd+Shift+,`).
