@@ -192,10 +192,16 @@ class SelectionListener(sublime_plugin.EventListener):
             Utils.clear_status(view)
             return
         
-        Utils.set_status(view, ''.join(line_to_violation[line_number]))
+        Utils.set_status(view, self.get_violations_messages(line_to_violation[line_number]))
 
     def should_update_status(self, file_path):
         return file_path and Storage.contains(file_path) and Storage.has_violations(file_path)
+
+    def get_violations_messages(self, violations):
+        res = ''
+        for v in violations:
+            res += v + ';'
+        return res[:-1]
 
 
 class SaveListener(sublime_plugin.EventListener):
